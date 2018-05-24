@@ -10,6 +10,6 @@ public class LoginResourceController {
 	
 	@GetMapping("/login")
 	String doLoading(){
-		return "You Are successfully Login";
+		return "You are successfully login";
 	}
 }

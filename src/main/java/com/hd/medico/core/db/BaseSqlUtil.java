@@ -18,6 +18,8 @@ import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hd.medico.core.exception.GenericException;
+
 
 
 
@@ -62,10 +64,10 @@ public abstract class BaseSqlUtil {
 	 * @param params
 	 *            The replacement parameters which are to be passed to query
 	 * @return A first row from result. The bean class
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public <T> T getQueryBean(String query, Class<T> beanClass,
-			Object... params) throws Exception {
+			Object... params) throws GenericException {
 
 		Connection connection = null;
 		T result = null;
@@ -95,10 +97,10 @@ public abstract class BaseSqlUtil {
 	 * @param params
 	 *            The replacement parameters which are to be passed to query
 	 * @return A first row from result. The bean class
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public <T> T getQueryBean(Connection connection, String query,
-			Class<T> beanClass, Object... params) throws Exception {
+			Class<T> beanClass, Object... params) throws GenericException {
 
 
 		ResultSetHandler<T> resultSetHandler = new BeanHandler<T>(beanClass);
@@ -109,9 +111,7 @@ public abstract class BaseSqlUtil {
 			result = queryRunner.query(connection, query, resultSetHandler,
 					params);
 		} catch (SQLException e) {
-			throw new Exception(e);
-		} catch (Exception exception) {
-			throw new Exception(exception);
+			throw new GenericException(e);
 		}
 		return result;
 	}
@@ -128,10 +128,10 @@ public abstract class BaseSqlUtil {
 	 * @param params
 	 *            The replacement parameters which are to be passed to query
 	 * @return A List containing bean class
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public <T> List<T> getQueryBeans(String query, Class<T> beanClass,
-			Object... params) throws Exception {
+			Object... params) throws GenericException {
 
 
 		Connection connection = null;
@@ -162,10 +162,10 @@ public abstract class BaseSqlUtil {
 	 * @param params
 	 *            The replacement parameters which are to be passed to query
 	 * @return A List containing bean class
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public <T> List<T> getQueryBeans(Connection connection, String query,
-			Class<T> beanClass, Object... params) throws Exception {
+			Class<T> beanClass, Object... params) throws GenericException {
 
 		ResultSetHandler<List<T>> resultSetHandler = new BeanListHandler<T>(
 				beanClass);
@@ -182,18 +182,9 @@ public abstract class BaseSqlUtil {
 //					+ "\n\n" + e.getMessage();
 //
 //			throw new DaoException(errorMessage);
-			throw new Exception(e);
+			throw new GenericException(e);
 
-		} catch (Exception exception) {
-//			logger.error(exception.getMessage(), exception);
-//
-//			String errorMessage = ErrorMessageConstants.QUERY_EXECUTION_FAILURE
-//					+ "\n\n" + logger.setParameter(query, params)
-//					+ "\n\n" + exception.getMessage();
-//
-//			throw new DaoException(errorMessage);
-			throw new Exception(exception);
-		}
+		} 
 		return result;
 
 	}
@@ -207,10 +198,10 @@ public abstract class BaseSqlUtil {
 	 *            The replacement parameters which are to be passed to query
 	 * @return First row from query. A Map containing key as columnNames and
 	 *         value as database value.
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public Map<String, Object> getQueryMap(String query, Object... params)
-			throws Exception {
+			throws GenericException {
 
 		logger.debug("Inside getQueryMap ..SQL Query is :" + query);
 
@@ -238,10 +229,10 @@ public abstract class BaseSqlUtil {
 	 *            The replacement parameters which are to be passed to query
 	 * @return First row from query. A Map containing key as columnNames and
 	 *         value as database value.
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public Map<String, Object> getQueryMap(Connection connection, String query,
-			Object... params) throws Exception {
+			Object... params) throws GenericException {
 
 		logger.debug(
 				"Inside getQueryMap with Connection..SQL Query is :" + query);
@@ -254,11 +245,8 @@ public abstract class BaseSqlUtil {
 			result = queryRunner.query(connection, query, handler, params);
 		} catch (SQLException ex) {
 			logger.error(ex.getMessage(), ex);
-			throw new Exception(ex);
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-			throw new Exception(ex);
-		}
+			throw new GenericException(ex);
+		} 
 		return result;
 	}
 
@@ -271,10 +259,10 @@ public abstract class BaseSqlUtil {
 	 *            The SQL query to be executed
 	 * @return A List containing a Map which contains key as columnNames and
 	 *         value as database value.
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public List<Map<String, Object>> getQueryMaps(String query,
-			Object... params) throws Exception {
+			Object... params) throws GenericException {
 
 		logger.debug("Inside getQueryMaps ..SQL Query is :" + query);
 
@@ -302,10 +290,10 @@ public abstract class BaseSqlUtil {
 	 *            The SQL query to be executed
 	 * @return A List containing a Map which contains key as columnNames and
 	 *         value as database value.
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public List<Map<String, Object>> getQueryMaps(Connection connection,
-			String query, Object... params) throws Exception {
+			String query, Object... params) throws GenericException {
 
 		logger.debug(
 				"Inside getQueryMaps with Connection object..SQL Query is :"
@@ -323,12 +311,9 @@ public abstract class BaseSqlUtil {
 			logger.error(e.getMessage(), e);
 
 
-			throw new Exception(e);
+			throw new GenericException(e);
 
-		} catch (Exception exception) {
-			logger.error(exception.getMessage(), exception);
-			throw new Exception(exception);
-		}
+		} 
 		return result;
 	}
 
@@ -340,10 +325,10 @@ public abstract class BaseSqlUtil {
 	 * @param params
 	 *            The replacement parameters which are passed to the query
 	 * @return Number of rows affected by the query.
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public long dmlExecutor(String query, Object... params)
-			throws Exception {
+			throws GenericException {
 
 		logger.debug("Inside dmlExecutor ..SQL Query is :" + query);
 
@@ -372,10 +357,10 @@ public abstract class BaseSqlUtil {
 	 * @param params
 	 *            The replacement parameters which are passed to the query
 	 * @return Number of rows affected by the query.
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public long dmlExecutor(Connection conn, String query, Object... params)
-			throws Exception {
+			throws GenericException {
 
 		logger.debug(
 				"Inside dmlExecutor with Connection object..SQL Query is :"
@@ -393,14 +378,9 @@ public abstract class BaseSqlUtil {
 			DbUtils.rollbackAndCloseQuietly(conn);
 			logger.error(e.getMessage(), e);
 
-			throw new Exception(e);
+			throw new GenericException(e);
 
-		} catch (Exception exception) {
-			DbUtils.rollbackAndCloseQuietly(conn);
-			logger.error(exception.getMessage(), exception);
-
-			throw new Exception(exception);
-		}
+		} 
 		return result;
 	}
 
@@ -415,11 +395,11 @@ public abstract class BaseSqlUtil {
 	 *            Name of the Oracle sequence field
 	 * @return Number of rows affected by the query. Incase of insert query ,
 	 *         Return sequence id of Oracle which is inserted in the Database.
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 
 	public long dmlExecutor(String query, Object[] params, String sequenceField)
-			throws Exception {
+			throws GenericException {
 
 		logger.debug(
 				"Inside dmlExecutor in sequenceField method  ..SQL Query is :"
@@ -505,10 +485,10 @@ public abstract class BaseSqlUtil {
 	 * @param query
 	 *            - query to get the result set
 	 * @return ResultSet
-	 * @throws Exception
+	 * @throws GenericException
 	 */
 	public ResultSet getResultSet(Connection connection, String query,
-			Object[] params) throws Exception {
+			Object[] params) throws GenericException {
 
 		QueryRunner queryRunner = new QueryRunner(true);
 		PreparedStatement stmt = null;
@@ -525,17 +505,8 @@ public abstract class BaseSqlUtil {
 //					+ "\n\n" + e.getMessage();
 //
 //			throw new DaoException(errorMessage);
-			throw new Exception(e);
-		} catch (Exception exception) {
-//			logger.error(exception.getMessage(), exception);
-//
-//			String errorMessage = ErrorMessageConstants.QUERY_EXECUTION_FAILURE
-//					+ "\n\n" + logger.setParameter(query, params)
-//					+ "\n\n" + exception.getMessage();
-//
-//			throw new DaoException(errorMessage);
-			throw new Exception(exception);
-		}
+			throw new GenericException(e);
+		} 
 		return rs;
 	}
 }
